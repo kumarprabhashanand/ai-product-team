@@ -24,8 +24,8 @@
 ## Install
 
 ```bash
-chmod +x install.sh
-./install.sh
+chmod +x claude-agents/install.sh
+./claude-agents/install.sh
 ```
 
 Restart Claude Code, then run `/agents` to confirm they loaded.
@@ -111,8 +111,7 @@ Agents run sequentially by default. With Agent Teams enabled, independent tasks 
 ## Files
 
 ```
-agents/
-├── README.md
+claude-agents/
 ├── install.sh
 ├── chief-of-staff.md       ⭐ start here — orchestrates everything
 ├── task-intake.md          🔍 reviews every task, asks clarifying questions

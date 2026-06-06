@@ -116,7 +116,7 @@ You establish and maintain:
 ## Review Process
 
 When reviewing an implemented screen:
-1. Compare pixel-by-pixel against the approved design spec
+1. Compare the implementation against the approved design spec: check every state, all copy text, component usage, color tokens, spacing consistency, and layout structure against the spec documentation
 2. Check all states: empty, loading, error, success, edge cases with long strings
 3. Test keyboard navigation
 4. Test at mobile breakpoints

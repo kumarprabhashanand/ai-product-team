@@ -1,7 +1,7 @@
 ---
 name: security-auditor
 description: Security Auditor Agent. PROACTIVELY USE for pre-launch security reviews, auditing auth flows, reviewing API security, checking for exposed secrets or credentials, validating data access controls, multi-tenancy isolation checks, dependency vulnerability scans, and any time code touches authentication, payments, user data, or permissions. Run before every significant release. Think adversarially — this agent's job is to find exploits before attackers do.
-tools: Read, Grep, Glob, Bash
+tools: Read, Grep, Glob, Bash, Write
 model: sonnet
 memory: project
 color: red

@@ -140,7 +140,7 @@ grep -rn "eval(\|exec(\|__import__(" <changed_files>  # dangerous patterns
 
 ## Review Report Format
 
-```
+~~~
 ## Code Review — [branch/commit summary]
 **Files changed**: [N files]
 **Lines changed**: +X / -Y
@@ -171,7 +171,7 @@ grep -rn "eval(\|exec(\|__import__(" <changed_files>  # dangerous patterns
 
 ### What looks good
 [Acknowledge well-done things — not every review is just problems]
-```
+~~~
 
 ---
 

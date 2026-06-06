@@ -110,6 +110,19 @@ After full feature flow, add:
 
 ---
 
+## Dispatching Specialists
+
+**Always use the `Agent` tool to invoke specialists.** Never use `Task`, `TaskCreate`, or any other tool — those are not available inside subagents and will throw "Task is not available inside subagents."
+
+```
+Agent(subagent_type="senior-fullstack", prompt="...")
+Agent(subagent_type="task-intake", prompt="...")
+```
+
+The `subagent_type` must match the `name:` field in the agent's frontmatter exactly.
+
+---
+
 ## Handoff Protocol
 
 When delegating to a specialist, always include:

@@ -1,6 +1,6 @@
 # AI Agent Team — Claude Code SaaS Squad
 
-10 specialized Claude Code sub-agents forming a complete, self-coordinating SaaS team. One install. Works in every project.
+11 specialized Claude Code sub-agents forming a complete, self-coordinating SaaS team. One install. Works in every project.
 
 ---
 
@@ -8,15 +8,16 @@
 
 | Agent | Model | Color | Role |
 |---|---|---|---|
-| `chief-of-staff` ⭐ | Opus | Orange | **Orchestrator** — your proxy. Discovers the team dynamically, routes everything |
+| `chief-of-staff` ⭐ | Opus | Orange | **Orchestrator** — your proxy. Discovers the team, routes everything, enforces quality gates, maintains project spine, runs retrospectives |
 | `task-intake` | Opus | Cyan | **Intake & Clarification** — interrogates every task before work starts |
 | `principal-engineer` | Opus | Purple | Architecture, technical decisions, system design |
 | `senior-pm` | Sonnet | Yellow | PRDs, product strategy, requirements, roadmap |
 | `senior-uiux` | Sonnet | Pink | UI/UX design, design system, user psychology |
 | `senior-fullstack` | Sonnet | Blue | Feature implementation, code, integrations |
-| `code-reviewer` | Sonnet | Red | Adversarial code review — after dev, before QA |
+| `code-reviewer` | Opus | Red | Adversarial code review — after dev, before QA |
 | `senior-qa` | Sonnet | Green | Tests, quality gates, bug discovery, release sign-off |
-| `security-auditor` | Sonnet | Red | Security review, pre-launch hardening, vulnerability finding |
+| `security-auditor` | Opus | Red | Security review, pre-launch hardening, vulnerability finding |
+| `devops-engineer` | Sonnet | Teal | CI/CD, deployment, environments, backups, monitoring, incidents, runbook |
 | `growth-marketer` | Sonnet | Orange | GTM strategy, SEO, copywriting, launch, conversion |
 
 ---
@@ -90,10 +91,13 @@ If you start your session as `chief-of-staff`, you get autonomous orchestration:
 
 The Chief of Staff:
 1. **Scans `~/.claude/agents/` at startup** to discover all available agents dynamically
-2. **Routes to `task-intake` first** to review the request, check the codebase, consult the PM, and ask clarifying questions
-3. **Sequences the right specialists** in the right order with proper handoffs
-4. **Validates each output** before passing it to the next stage
-5. **Reports back** with what was done, what decisions were made, and what you should watch for
+2. **Reads the project spine** (`CLAUDE.md`, `docs/DECISIONS.md`, `docs/STATE.md`, `docs/RUNBOOK.md`) to load context
+3. **Routes to `task-intake` first** to review the request, check the codebase, consult the PM, and ask clarifying questions
+4. **Sequences the right specialists** in the right order with proper handoffs
+5. **Validates each output with evidence** (gate outputs, file paths, test counts) — claims without evidence are rejected
+6. **Enforces quality gates** — never advances work past a red gate; runs a findings registry for Critical/High issues
+7. **Keeps the project spine updated** after every workflow — STATE.md, DECISIONS.md, RUNBOOK.md
+8. **Runs retrospectives** so lessons feed back into the team's process
 
 ### Method 2: Direct specialist invocation (stay in current session)
 
@@ -104,6 +108,7 @@ If you're already in a session, invoke specialists directly:
 @"senior-fullstack (agent)" implement the user authentication
 @"code-reviewer (agent)" review the last commit
 @"security-auditor (agent)" full security review before launch
+@"devops-engineer (agent)" set up CI/CD and deployment for this project
 @"growth-marketer (agent)" write the landing page copy
 ```
 
@@ -121,6 +126,21 @@ Every new task goes through `task-intake` first. It:
 - Asks you up to 5 focused clarifying questions before anyone starts building
 
 This is the agent that answers your question: *"who reviews the task, discusses it with the PM, and asks me clarifying questions?"*
+
+---
+
+## The Project Spine
+
+The chief-of-staff maintains four on-disk files that act as the team's shared memory across sessions. Specialists read and update these so context is never re-derived from scratch.
+
+| File | Owner | Purpose |
+|---|---|---|
+| `CLAUDE.md` | chief-of-staff | Stack, conventions, how to run/test/deploy |
+| `docs/DECISIONS.md` | chief-of-staff | Append-only decision log — every significant decision, dated with rationale. Decisions are law until reversed. |
+| `docs/STATE.md` | chief-of-staff | Feature board, findings registry, gate command list, go-live blockers |
+| `docs/RUNBOOK.md` | devops-engineer | Operations — deploy commands, rollback, monitoring, incident response |
+
+On a new project the chief-of-staff scaffolds all four files before any other work begins. Every workflow ends with the spine updated — a workflow missing spine updates is not finished.
 
 ---
 
@@ -147,9 +167,10 @@ When using Method 2 (direct specialist invocation), agents are available for you
 |---|---|
 | "Build feature X" | Intake → PM → Arch → Design → Dev → Code Review → QA |
 | "Fix this bug" | Intake → QA diagnose → Dev fix → Code Review → QA verify |
-| "Pre-launch check" | Security Audit → QA regression → Dev fixes → Growth readiness → Go/no-go |
+| "Pre-launch check" | Security Audit → DevOps readiness → QA regression → Dev fixes → Growth readiness → Go/no-go |
 | "Write the landing page" | Intake → PM brief → Growth copy → Design → Dev implement |
-| "Start a new project" | Intake → PM vision → Arch → Design system → Growth positioning → Dev scaffold |
+| "Start a new project" | Intake → PM vision → Arch → DevOps scaffold → Design system → Growth positioning → Dev scaffold |
+| "Deploy this / set up CI" | DevOps → Arch (if new infra) → Security → Runbook written |
 
 ### When invoking specialists directly (Method 2)
 
@@ -174,7 +195,7 @@ Agents run sequentially by default. With Agent Teams enabled, independent tasks 
 ```
 claude-agents/
 ├── install.sh
-├── chief-of-staff.md       ⭐ start here — orchestrates everything
+├── chief-of-staff.md       ⭐ start here — orchestrates everything, maintains project spine
 ├── task-intake.md          🔍 reviews every task, asks clarifying questions
 ├── principal-engineer.md   🏗  architecture & technical decisions
 ├── senior-pm.md            📋 product strategy & PRDs
@@ -183,5 +204,6 @@ claude-agents/
 ├── code-reviewer.md        👁  code review (after dev, before QA)
 ├── senior-qa.md            🧪 testing & quality gates
 ├── security-auditor.md     🔒 security review & hardening
+├── devops-engineer.md      🚀 CI/CD, deployment, environments, runbook
 └── growth-marketer.md      📈 GTM, SEO, copy & launch
 ```
